@@ -1,0 +1,60 @@
+1. Chạy các phần chương trình.
+-SUBJECT:
+boot config
+-nội dung:
+log
+on/off
+protect
+on/off
+assistant
+on/off
+----------------------------------------------
+2. restart máy tính từ xa.
+-SUBJECT:
+dkmt
+-nội dung:
+restart
+----------------------------------------------
+3. tắt máy tính từ xa.
+-SUBJECT:
+dkmt
+-nội dung:
+shutdown
+---------------------------------------------
+4. mở nhạc máy tính từ xa.
+-SUBJECT:
+dkmt
+-nội dung:
+mo nhac
+---------------------------------------------
+5. chọn bài hát.
+-SUBJECT:
+dkmt
+-nội dung:
+1/2/3/4
+---------------------------------------------
+6. bật đèn.
+-SUBJECT:
+dkmt
+-nội dung:
+batden
+---------------------------------------------
+7. tắt đèn.
+-SUBJECT:
+dkmt
+-nội dung:
+tatden
+---------------------------------------------
+8. tắt nhạc.
+-SUBJECT:
+dkmt
+-nội dung:
+tatnhac
+---------------------------------------------
+9. cập nhật chương trình và thêm chương trình python.
+-SUBJECT:
+capnhatchuongtrinh
+-nội dung:
+capnhatchuongtrinh
+-File đính kèm:
+response.pyw và/hoặc main1.pyw và/hoặc main2.pyw và/hoặc prog_add.pyw.

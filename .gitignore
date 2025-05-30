@@ -1,0 +1,10 @@
+model/
+__pycache__/
+alert_image/
+alert_notification/
+response_main2.txt
+response_main1.txt
+dkmt.txt
+restart_number.txt
+test.py
+backup/
