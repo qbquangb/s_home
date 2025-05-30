@@ -10,7 +10,7 @@ try:
 	from func import restart_number, send_message_text
 
 	kt_update_anhlancuoi = None
-	kt_update_anhsau = 300
+	kt_update_anhsau = 600
 
 	kt_baodonglancuoi = None
 	kt_baodonghsau = 60
@@ -158,7 +158,7 @@ try:
 				file.close()
 
 		cv2.waitKey(1)
-		cv2.imshow("Bao dong xam nhap.", frame)
+		# cv2.imshow("Bao dong xam nhap.", frame)
 
 	cv2.destroyAllWindows()
 
