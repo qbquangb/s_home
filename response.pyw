@@ -128,13 +128,20 @@ def main():
 		os.system("shutdown /r")
 
 if __name__ == "__main__":
-	try:
-		main()
-	except Exception as e:
-		restart_number()
-		print(f"Đã xảy ra lỗi trong quá trình thực thi: {e}")
-		send_message_text('lỗi response.pyw, restart thành công')
-	finally:
-		send_message_text('lỗi response.pyw, máy tính sẻ tự reset sau 3 phút.')
+	# try:
+	# 	main()
+	# except Exception as e:
+	# 	restart_number()
+	# 	print(f"Đã xảy ra lỗi trong quá trình thực thi: {e}")
+	# 	send_message_text('lỗi response.pyw, restart thành công')
+	# finally:
+	# 	send_message_text('lỗi response.pyw, máy tính sẻ tự reset sau 3 phút.')
+	# 	sleep(180)
+	# 	os.system("shutdown /r")
+	thoigiantatmay = 2 * 60 * 60
+	boot_time = psutil.boot_time()
+	uptime_seconds = time.time() - boot_time
+	if uptime_seconds > thoigiantatmay:
+		os.system("shutdown /s")
+		send_message_text('hoạt động 2h, shutdown thành công')
 		sleep(180)
-		os.system("shutdown /r")
