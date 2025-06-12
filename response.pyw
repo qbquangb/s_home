@@ -139,9 +139,11 @@ if __name__ == "__main__":
 	# 	sleep(180)
 	# 	os.system("shutdown /r")
 	thoigiantatmay = 2 * 60 * 60
-	boot_time = psutil.boot_time()
-	uptime_seconds = time.time() - boot_time
-	if uptime_seconds > thoigiantatmay:
-		os.system("shutdown /s")
-		send_message_text('hoạt động 2h, shutdown thành công')
-		sleep(180)
+	while True:
+		sleep(20)
+		boot_time = psutil.boot_time()
+		uptime_seconds = time.time() - boot_time
+		if uptime_seconds > thoigiantatmay:
+			os.system("shutdown /s")
+			send_message_text('hoạt động 2h, shutdown thành công')
+			sleep(180)
