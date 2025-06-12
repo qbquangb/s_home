@@ -98,7 +98,7 @@ def main():
 	thoigiantatmay = 6 * 60 * 60
 	boot_time = psutil.boot_time()
 	uptime_seconds = time.time() - boot_time
-	if (abs(uptime_seconds - thoigiantatmay)) < 1200:
+	if uptime_seconds > thoigiantatmay:
 		os.system("shutdown /s")
 		send_message_text('hoạt động 6h, shutdown thành công')
 		sleep(180)
@@ -135,5 +135,6 @@ if __name__ == "__main__":
 		print(f"Đã xảy ra lỗi trong quá trình thực thi: {e}")
 		send_message_text('lỗi response.pyw, restart thành công')
 	finally:
+		send_message_text('lỗi response.pyw, máy tính sẻ tự reset sau 3 phút.')
 		sleep(180)
 		os.system("shutdown /r")

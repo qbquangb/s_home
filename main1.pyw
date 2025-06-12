@@ -238,5 +238,6 @@ except BaseException as e:
 	send_message_text(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
 
 finally:
+	send_message_text('Lỗi main1.pyw. Máy tính sẻ tự reset sau 3 phút.')
 	sleep(180)
 	os.system("shutdown /r")
