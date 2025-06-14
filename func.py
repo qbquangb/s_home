@@ -6,6 +6,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import socket
 import imaplib
+import sys
 
 def is_connected():
 	try:
@@ -38,7 +39,6 @@ def send_message_text(message_text):
 		server.quit()
 		return True
 	except Exception as e:
-		print(f"Đã xảy ra lỗi khi gửi email: {e}")
 		return False
 
 def check_message_text():
@@ -64,14 +64,12 @@ def check_message_text():
 				break
 		email_ids = messages[0].split()
 		if not email_ids:
-			print("Không có email mới.")
 			mail.logout()
 			return False
 
 		for email_id in email_ids:
 			status, data = mail.fetch(email_id, '(RFC822)')
 			if status != 'OK':
-				print("Lỗi khi lấy email id:", email_id)
 				continue
 			# Lấy nội dung email
 			raw_email = data[0][1]
@@ -92,7 +90,6 @@ def check_message_text():
 		mail.logout()
 		return True
 	except Exception as e:
-		print(f"Đã xảy ra lỗi khi kiểm tra email: {e}")
 		return False
 	
 def send_text_photo(text, photo_path):
@@ -127,7 +124,6 @@ def send_text_photo(text, photo_path):
 		server.quit()
 		return True
 	except Exception as e:
-		print(f"Đã xảy ra lỗi khi gửi email: {e}")
 		return False
 	
 def restart_number(file_path = "restart_number.txt"):
@@ -143,5 +139,4 @@ def restart_number(file_path = "restart_number.txt"):
 		with open(file_path, "w") as file:
 			file.write(str(restart_count))
 			file.close()
-	print(f"Đã ghi số lần khởi động lại: {restart_count} lần.")
 	return

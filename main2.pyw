@@ -8,6 +8,7 @@ try:
 	from image_save import luuanh
 	import os
 	from func import restart_number, send_message_text
+	import sys
 
 	kt_update_anhlancuoi = None
 	kt_update_anhsau = 600
@@ -82,10 +83,10 @@ try:
 				cv2.drawContours(fgMask, contours[i], 0, (0, 0, 255), 6)
 
 		trigger = np.sum(fgMask > 0) > 2500  # Set threshold value as 1000 (adjust as needed)
-		if trigger:
-			print("Trigger activated!")
-		else:
-			print("No trigger detected.")
+		# if trigger:
+		# 	print("Trigger activated.", file=sys.stdout, flush=True)
+		# else:
+		# 	print("No trigger detected.", file=sys.stdout, flush=True)
 		
 		if kt_update_anhlancuoi is None:
 			kt_update_anhlancuoi = datetime.datetime.utcnow()
@@ -190,11 +191,11 @@ try:
 
 except Exception as e:
 	restart_number()
-	print(f'Lỗi: {e}')
+	print(f'err: {e}', file=sys.stderr, flush=True)
 	send_message_text(f'Lỗi: {e}, máy tính sẻ tự reset.')
 except BaseException as e:
 	restart_number()
-	print(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
+	print(f'err {e}', file=sys.stderr, flush=True)
 	send_message_text(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
 finally:
 	cv2.destroyAllWindows()

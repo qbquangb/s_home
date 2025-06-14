@@ -7,15 +7,16 @@ try:
 	from func import send_message_text, check_message_text, send_text_photo, restart_number
 	import datetime
 	import serial
+	import sys
 
+	print("Khoi dong thanh cong.", file=sys.stdout, flush=True)
 	with open("restart_number.txt", "r") as file:
 		restart_count = int(file.read().strip())
 		file.close()
-	if restart_count == 8:
+	if restart_count > 7:
 		with open("restart_number.txt", "w") as file:
 			file.write("0")
 			file.close()
-		print('Máy tính đã restart 8 lần, máy tính sẻ tự tắt.')
 		send_message_text('Máy tính đã restart 8 lần, máy tính sẻ tự tắt.')
 		sleep(180)
 		os.system("shutdown /s")
@@ -41,7 +42,6 @@ try:
 	cap = None
 	cap4 = None
 
-	print('Khởi động thành công')
 	send_message_text('Khởi động thành công')
 	ser = serial.Serial(port='COM4', baudrate=9600, timeout=0.2)
 	ktbatdenlancuoi = None
@@ -229,12 +229,12 @@ try:
 
 except Exception as e:
 	restart_number()
-	print(f'Lỗi: {e}')
+	print(f'err {e}', file=sys.stderr, flush=True)
 	send_message_text(f'Lỗi: {e}, máy tính sẻ tự reset.')
 
 except BaseException as e:
 	restart_number()
-	print(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
+	print(f'err {e}', file=sys.stderr, flush=True)
 	send_message_text(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
 
 finally:

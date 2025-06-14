@@ -9,6 +9,7 @@ import socket
 import time
 from time import sleep
 from func import restart_number
+import sys
 
 def is_connected():
 	try:
@@ -85,15 +86,12 @@ def send_message_text(message_text):
 		server.quit()
 		return True
 	except Exception as e:
-		print(f"Đã xảy ra lỗi khi gửi email: {e}")
 		return False
 	
 def main():
 
 	while not is_connected():
-		print("Không có kết nối mạng. Đang chờ...")
 		sleep(5)
-	print("Đã kết nối mạng.")
 
 	thoigiantatmay = 6 * 60 * 60
 	boot_time = psutil.boot_time()

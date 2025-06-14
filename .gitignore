@@ -9,3 +9,6 @@ restart_number.txt
 test.py
 backup/
 update_image/
+output.txt
+error.txt
+*.log
