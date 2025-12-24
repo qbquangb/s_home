@@ -1,8 +1,11 @@
+# Chuong trinh kiem tra email tren Gmail va tai file dinh kem co ten response.pyw, main1.pyw, main2.pyw, prog_add.pyw neu co mang
+
 import imaplib
 import email
 import os
 from time import sleep
 import socket
+import time
 
 # Cấu hình thông tin đăng nhập Gmail
 USERNAME = 'qbquangbinh@gmail.com'
@@ -10,6 +13,9 @@ PASSWORD = os.getenv("PASS_EMAIL") # Nếu dùng xác thực 2 bước, hãy s�
 
 IMAP_SERVER = 'imap.gmail.com'
 IMAP_PORT = 993
+
+TIMEOUT_SECONDS = 40 # Thời gian chờ tối đa cho kết nối mạng
+isConnected = True
 
 def check_and_download():
     try:
@@ -70,8 +76,16 @@ def is_connected():
         return False
 
 if __name__ == "__main__":
+    start = time.time()
     while not is_connected():
+        elapsed = time.time() - start
+        if elapsed >= TIMEOUT_SECONDS:
+            isConnected = False
+            break
         print("Không có kết nối mạng. Đang chờ...")
         sleep(5)
-    print("Đã kết nối mạng.")
-    check_and_download()
+    if not isConnected:
+        print(f"Không có kết nối mạng sau {TIMEOUT_SECONDS}s")
+    else:
+        print("Đã kết nối mạng.")
+        check_and_download()
