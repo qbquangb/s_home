@@ -183,7 +183,7 @@ try:
 					filename = luuanh('alert_image')
 					cv2.imwrite('alert_image/' + filename + ".png", cv2.resize(frame, dsize=None, fx=0.40, fy=0.40))
 
-					python_uno = 'bat'
+					python_uno = 'batcoi'
 					# if (ser.in_waiting == 0):
 					python_uno = python_uno + '\r'
 					python_uno = python_uno.encode()

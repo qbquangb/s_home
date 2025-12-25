@@ -9,6 +9,8 @@ from func import restart_number
 import datetime
 import sys
 
+sleep(20)
+
 TIMEOUT_SECONDS = 40 # Thời gian chờ tối đa cho kết nối mạng
 isConnected = True
 

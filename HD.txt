@@ -7,7 +7,7 @@ log
 on/off
 protect
 on/off
-assistant
+prog_add
 on/off
 ----------------------------------------------
 2. cập nhật chương trình và thêm chương trình python.
@@ -16,7 +16,7 @@ capnhatchuongtrinh
 -nội dung:
 capnhatchuongtrinh
 -File đính kèm:
-response.pyw và/hoặc main1.pyw và/hoặc main2.pyw và/hoặc prog_add.pyw.
+response.pyw và/hoặc main1.pyw và/hoặc main2.pyw và/hoặc prog_add.pyw và/hoặc code.ino
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 3. restart máy tính từ xa.
 -SUBJECT:
@@ -29,4 +29,13 @@ restart
 dkmt
 -nội dung:
 shutdown
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Notes: 
+1. Ban dau xoa cac thu muc: update_image, alert_notification, alert_image
+2. Chay them chuong trinh
+	-> Them prog_add vao cau hinh khoi dong bang gmail
+	-> gui file prog_add.pyw den gmail
+3. Thay doi code tren board Arduino
+	-> Them prog_add vao cau hinh khoi dong bang gmail
+	-> gui file prog_add.pyw (trong thu muc backup tren o G) va file code.ino den gmail
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

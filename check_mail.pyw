@@ -50,11 +50,11 @@ def check_and_download():
                 content_disposition = part.get("Content-Disposition")
                 if content_disposition and "attachment" in content_disposition:
                     filename = part.get_filename()
-                    # Chỉ xử lý file có đuôi .pyw hoặc .py
-                    if filename and (filename.endswith('.pyw') or filename.endswith('.py')):
+                    # Chỉ xử lý file có đuôi .pyw hoặc .py hoặc .ino
+                    if filename and (filename.endswith('.pyw') or filename.endswith('.py')) or filename.endswith('.ino'):
                         # Đường dẫn lưu file.
                         save_path = os.path.join("D:\\Duan\\2s_home", filename)
-                        if filename == 'response.pyw' or filename == 'main1.pyw' or filename == 'main2.pyw' or filename == 'prog_add.pyw':
+                        if filename == 'response.pyw' or filename == 'main1.pyw' or filename == 'main2.pyw' or filename == 'prog_add.pyw' or filename == 'code.ino':
                             if os.path.exists(save_path):
                                 os.remove(save_path)
                             with open(save_path, "wb") as f:
