@@ -130,7 +130,7 @@ if __name__ == "__main__":
 		while not get_val1():
 			sleep(3)
 
-		sleep(120) # Kiểm tra mỗi 2 phút
+		sleep(180) # Kiểm tra mỗi 3 phút
 
 		while not get_val2_lan2():
 			sleep(3)
