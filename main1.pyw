@@ -1,25 +1,57 @@
-try:
-	from datetime import date, datetime
-	from time import sleep
-	import os
-	import webbrowser
-	from pynput.mouse import Button, Controller
-	from func import send_message_text, check_message_text, send_text_photo, restart_number
-	import datetime
-	import serial
-	import sys
+import socket
+import time
+from datetime import date, datetime
+from time import sleep
+import os
+import webbrowser
+from pynput.mouse import Button, Controller
+from func import restart_number
+import datetime
+import sys
 
-	print("Khoi dong thanh cong.", file=sys.stdout, flush=True)
+TIMEOUT_SECONDS = 40 # Thời gian chờ tối đa cho kết nối mạng
+isConnected = True
+
+def is_connected():
+	try:
+		# Kiểm tra kết nối tới máy chủ DNS của Google
+		socket.create_connection(("8.8.8.8", 53), timeout=5)
+		return True
+	except:
+		return False
+	
+start = time.time()
+while not is_connected():
+	elapsed = time.time() - start
+	if elapsed >= TIMEOUT_SECONDS:
+		isConnected = False
+		break
+	print("Không có kết nối mạng. Đang chờ...")
+	sleep(5)
+if not isConnected:
+	print(f"Không có kết nối mạng sau {TIMEOUT_SECONDS}s")
+else:
+	print("Đã kết nối mạng.")
+
+if isConnected:
+	from func import send_message_text, check_message_text, send_text_photo
+
+try:
+
+	RESET_MAX = 12
+	print("Khoi dong thanh cong.")
 	with open("restart_number.txt", "r") as file:
 		restart_count = int(file.read().strip())
 		file.close()
-	if restart_count > 7:
+	if restart_count > RESET_MAX:
 		with open("restart_number.txt", "w") as file:
 			file.write("0")
 			file.close()
-		send_message_text('Máy tính đã restart 8 lần, máy tính sẻ tự tắt.')
+		if isConnected:
+			send_message_text(f'Máy tính đã khởi động lại {RESET_MAX} lần liên tiếp, hệ thống sẽ tắt máy để tránh lỗi lặp lại.')
 		sleep(180)
 		os.system("shutdown /s")
+		sleep(180)
 
 	del file
 	del restart_count
@@ -42,10 +74,8 @@ try:
 	cap = None
 	cap4 = None
 
-	send_message_text('Khởi động thành công')
-	ser = serial.Serial(port='COM4', baudrate=9600, timeout=0.2)
-	ktbatdenlancuoi = None
-	ktbatdensau = 10
+	if isConnected:
+		send_message_text('Khởi động thành công')
 
 	while True:
 
@@ -58,35 +88,11 @@ try:
 			if val2 == 10000:
 				val2 = 0
 
-		# Phan code dieu khien den.
-		if (ktbatdenlancuoi is None) or ((datetime.datetime.utcnow() - ktbatdenlancuoi).total_seconds() > ktbatdensau):
-			ktbatdenlancuoi = datetime.datetime.utcnow()
-
-			check_message_text()
-			lines = []
-			if os.path.exists("dkmt.txt"):
-				with open("dkmt.txt", "r", encoding="utf-8") as dkmt_file:
-					lines = dkmt_file.readlines()
-					dkmt_file.close()
-			if lines:
-				res = lines[0].strip()
-
-				if res == 'batden':
-					ser.write(b'batloa\r')
-					sleep(3)
-					send_message_text('Đèn đã được bật.')
-				elif res == 'tatden':
-					ser.write(b'tatloa\r')
-					sleep(3)
-					send_message_text('Đèn đã được tắt.')
-				else:
-					pass
-
 		# Phan code dieu khien den may tinh.
 		if (ktdkmaytinhlancuoi is None) or ((datetime.datetime.utcnow() - ktdkmaytinhlancuoi).total_seconds() > ktdkmaytinhsau):
 			ktdkmaytinhlancuoi = datetime.datetime.utcnow()
 
-			check_message_text()
+			check_message_text("dkmt")
 			lines = []
 			if os.path.exists("dkmt.txt"):
 				with open("dkmt.txt", "r", encoding="utf-8") as dkmt_file:
@@ -96,98 +102,18 @@ try:
 				res = lines[0].strip()
 
 				if res == 'restart':
+					if isConnected:
+						send_message_text('restart thành công')
+					sleep(180)
 					os.system("shutdown /r")
-					send_message_text('restart thành công')
 					sleep(180)
 
 				elif (res == 'shutdown'):
-					os.system("shutdown /s")
-					send_message_text('shutdown thành công')
+					if isConnected:
+						send_message_text('shutdown thành công')
 					sleep(180)
-
-				elif (res == 'mo nhac'):
-					send_message_text('Xin mời bạn chọn tên bài hát:\n1.Nhớ đêm giã bạn.\n2.Hoa cau vườn trầu.\n3.Chỉ là phù du.\n4.Tủi phận.')
-					while True:
-						check_message_text()
-						lines = []
-
-						if os.path.exists("dkmt.txt"):
-							with open("dkmt.txt", "r", encoding="utf-8") as dkmt_file:
-								lines = dkmt_file.readlines()
-								dkmt_file.close()
-						if lines:
-							result = lines[0].strip()
-
-							if (result == '1') or (result == '2') or (result == '3') or (result == '4') :
-								break
-					if (result == '1'):
-						url2 = 'https://www.youtube.com/watch?v=w-m6zwlmlMo'
-						webbrowser.open(url2)
-						send_message_text('Đang phát nhớ đêm giã bạn.')
-						sleep(240)
-
-						mouse = Controller()
-						mouse.position = (600, 400)
-						mouse.press(Button.right)
-						mouse.release(Button.right)
-						mouse.move(40, 20)
-						mouse.press(Button.left)
-						mouse.release(Button.left)
-						send_message_text('Video đang phát lặp lại.')
-
-					if (result == '2'):
-						url2 = 'https://www.youtube.com/watch?v=4CB175qsx3k'
-						webbrowser.open(url2)
-						send_message_text('Đang phát hoa cau vườn trầu.')
-						sleep(240)
-
-						mouse = Controller()
-						mouse.position = (600, 400)
-						mouse.press(Button.right)
-						mouse.release(Button.right)
-						mouse.move(40, 20)
-						mouse.press(Button.left)
-						mouse.release(Button.left)
-						send_message_text('Video đang phát lặp lại.')
-
-					if (result == '3'):
-						url2 = 'https://www.youtube.com/watch?v=IZcaxCZc7Uw'
-						webbrowser.open(url2)
-						send_message_text('Đang phát chỉ là phù du.')
-						sleep(240)
-
-						mouse = Controller()
-						mouse.position = (600, 400)
-						mouse.press(Button.right)
-						mouse.release(Button.right)
-						mouse.move(40, 20)
-						mouse.press(Button.left)
-						mouse.release(Button.left)
-						send_message_text('Video đang phát lặp lại.')
-
-					if (result == '4'):
-						url2 = 'https://www.youtube.com/watch?v=3arFjgeOyXE'
-						webbrowser.open(url2)
-						send_message_text('Đang phát tủi phận.')
-						sleep(240)
-
-						mouse = Controller()
-						mouse.position = (600, 400)
-						mouse.press(Button.right)
-						mouse.release(Button.right)
-						mouse.move(40, 20)
-						mouse.press(Button.left)
-						mouse.release(Button.left)
-						send_message_text('Video đang phát lặp lại.')
-				elif (res == 'tatnhac'):
-					mouse = Controller()
-					mouse.position = (1897, 14)
-					mouse.press(Button.left)
-					mouse.release(Button.left)
-					send_message_text('Đã tắt nhạc.')
-					sleep(30)
-				else:
-					pass
+					os.system("shutdown /s")
+					sleep(180)
 
 		# Phan code video.
 
@@ -199,7 +125,8 @@ try:
 				latest_file = max(files, key=os.path.getctime)
 				cap2 = os.path.basename(latest_file)
 				if cap != cap2:
-					send_text_photo(text = cap2, photo_path = latest_file)
+					if isConnected:
+						send_text_photo(text = cap2, photo_path = latest_file)
 					cap = cap2
 
 		if (kt_yc_guianhlancuoi is None) or ((datetime.datetime.utcnow() - kt_yc_guianhlancuoi).total_seconds() > kt_yc_guianhsau):
@@ -211,7 +138,8 @@ try:
 				latest_file = max(files, key=os.path.getctime)
 				cap3 = os.path.basename(latest_file)
 
-				send_text_photo(text = cap3, photo_path = latest_file)
+				if isConnected:
+					send_text_photo(text = cap3, photo_path = latest_file)
 
 			else:
 				pass
@@ -224,20 +152,25 @@ try:
 				latest_file = max(files, key=os.path.getctime)
 				cap5 = os.path.basename(latest_file)
 				if cap4 != cap5:
-					send_message_text(cap5)
+					if isConnected:
+						send_message_text(cap5)
 					cap4 = cap5
 
 except Exception as e:
 	restart_number()
 	print(f'err {e}', file=sys.stderr, flush=True)
-	send_message_text(f'Lỗi: {e}, máy tính sẻ tự reset.')
+	if isConnected:
+		send_message_text(f'Lỗi: {e}, máy tính sẻ tự reset.')
 
 except BaseException as e:
 	restart_number()
 	print(f'err {e}', file=sys.stderr, flush=True)
-	send_message_text(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
+	if isConnected:
+		send_message_text(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
 
 finally:
-	send_message_text('Lỗi main1.pyw. Máy tính sẻ tự reset sau 3 phút.')
+	if isConnected:
+		send_message_text('Lỗi main1.pyw. Máy tính sẻ tự reset sau 3 phút.')
 	sleep(180)
 	os.system("shutdown /r")
+	sleep(180)

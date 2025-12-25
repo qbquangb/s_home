@@ -1,14 +1,44 @@
+import socket
+import time
+import cv2
+import numpy as np
+from datetime import date, datetime
+import serial
+from time import sleep
+import datetime
+from image_save import luuanh
+import os
+from func import restart_number
+import sys
+
+TIMEOUT_SECONDS = 40 # Thời gian chờ tối đa cho kết nối mạng
+isConnected = True
+
+def is_connected():
+	try:
+		# Kiểm tra kết nối tới máy chủ DNS của Google
+		socket.create_connection(("8.8.8.8", 53), timeout=5)
+		return True
+	except:
+		return False
+	
+start = time.time()
+while not is_connected():
+	elapsed = time.time() - start
+	if elapsed >= TIMEOUT_SECONDS:
+		isConnected = False
+		break
+	print("Không có kết nối mạng. Đang chờ...")
+	sleep(5)
+if not isConnected:
+	print(f"Không có kết nối mạng sau {TIMEOUT_SECONDS}s")
+else:
+	print("Đã kết nối mạng.")
+
+if isConnected:
+	from func import send_message_text
+
 try:
-	import cv2
-	import numpy as np
-	from datetime import date, datetime
-	import serial
-	from time import sleep
-	import datetime
-	from image_save import luuanh
-	import os
-	from func import restart_number, send_message_text
-	import sys
 
 	kt_update_anhlancuoi = None
 	kt_update_anhsau = 600
@@ -19,7 +49,7 @@ try:
 	python_uno = None
 	data = None
 
-	ser = serial.Serial(port='COM3', baudrate=9600, timeout=0.2)
+	ser = serial.Serial(port='COM4', baudrate=9600, timeout=0.2)
 	classnames_file = "model/classnames.txt"
 	weights_file = "model/yolov3.weights"
 	config_file = "model/yolov3.cfg"
@@ -192,13 +222,17 @@ try:
 except Exception as e:
 	restart_number()
 	print(f'err: {e}', file=sys.stderr, flush=True)
-	send_message_text(f'Lỗi: {e}, máy tính sẻ tự reset.')
+	if isConnected:
+		send_message_text(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
 except BaseException as e:
 	restart_number()
 	print(f'err {e}', file=sys.stderr, flush=True)
-	send_message_text(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
+	if isConnected:
+		send_message_text(f'Chương trình bị lỗi, {e}, máy tính sẻ tự reset')
 finally:
 	cv2.destroyAllWindows()
-	send_message_text('Lỗi main2.pyw. Máy tính sẻ tự reset sau 3 phút.')
+	if isConnected:
+		send_message_text('Lỗi main2.pyw. Máy tính sẻ tự reset sau 3 phút.')
 	sleep(180)
 	os.system("shutdown /r")
+	sleep(180)

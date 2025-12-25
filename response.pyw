@@ -95,78 +95,8 @@ def send_message_text(message_text):
 		return True
 	except Exception as e:
 		return False
-	
-def main():
-
-	start = time.time()
-	while not is_connected():
-		elapsed = time.time() - start
-		if elapsed >= TIMEOUT_SECONDS:
-			isConnected = False
-			break
-		print("Không có kết nối mạng. Đang chờ...")
-		sleep(5)
-	if not isConnected:
-		print(f"Không có kết nối mạng sau {TIMEOUT_SECONDS}s")
-	else:
-		print("Đã kết nối mạng.")
-
-	thoigiantatmay = TIME_SHUTDOWN * 60 * 60
-	boot_time = psutil.boot_time()
-	uptime_seconds = time.time() - boot_time
-	if uptime_seconds > thoigiantatmay:
-		send_message_text(f'hoạt động quá {TIME_SHUTDOWN}h, shutdown thành công')
-		sleep(180)
-		os.system("shutdown /s")
-		sleep(180)
-
-	while not get_val2():
-		sleep(3)
-
-	while not get_val1():
-		sleep(3)
-
-	sleep(600) # Cho 10 phut
-
-	while not get_val2_lan2():
-		sleep(3)
-
-	while not get_val1_lan2():
-		sleep(3)
-
-	if int(val2) == int(val22):
-		send_message_text('not response main2, restart thành công')
-		sleep(180)
-		os.system("shutdown /r")
-		sleep(180)
-
-	if int(val1) == int(val12):
-		send_message_text('not response main1, restart thành công')
-		sleep(180)
-		os.system("shutdown /r")
-		sleep(180)
 
 if __name__ == "__main__":
-	# try:
-	# 	main()
-	# except Exception as e:
-	# 	restart_number()
-	# 	print(f"Đã xảy ra lỗi trong quá trình thực thi: {e}")
-	# 	send_message_text('lỗi response.pyw, restart thành công')
-	# finally:
-	# 	send_message_text('lỗi response.pyw, máy tính sẻ tự reset sau 3 phút.')
-	# 	sleep(180)
-	# 	os.system("shutdown /r")
-	# thoigiantatmay = 2 * 60 * 60
-	# while True:
-	# 	sleep(20)
-	# 	boot_time = psutil.boot_time()
-	# 	uptime_seconds = time.time() - boot_time
-	# 	if uptime_seconds > thoigiantatmay:
-	# 		os.system("shutdown /s")
-	# 		send_message_text('hoạt động 2h, shutdown thành công')
-	# 		sleep(180)
-
 
 	start = time.time()
 	while not is_connected():
@@ -184,11 +114,12 @@ if __name__ == "__main__":
 	thoigiantatmay = TIME_SHUTDOWN * 60 * 60
 
 	while True:
-		sleep(90) # Kiểm tra mỗi 90 giây
+		
 		boot_time = psutil.boot_time()
 		uptime_seconds = time.time() - boot_time
 		if uptime_seconds > thoigiantatmay:
-			send_message_text(f'hoạt động quá {TIME_SHUTDOWN}h, shutdown thành công')
+			if isConnected:
+				send_message_text(f'hoạt động quá {TIME_SHUTDOWN}h, shutdown thành công')
 			sleep(180)
 			os.system("shutdown /s")
 			sleep(180)
@@ -199,7 +130,7 @@ if __name__ == "__main__":
 		while not get_val1():
 			sleep(3)
 
-		sleep(600) # Cho 10 phut
+		sleep(120) # Kiểm tra mỗi 2 phút
 
 		while not get_val2_lan2():
 			sleep(3)
@@ -208,13 +139,17 @@ if __name__ == "__main__":
 			sleep(3)
 
 		if int(val2) == int(val22):
-			send_message_text('not response main2, restart thành công')
+			restart_number()
+			if isConnected:
+				send_message_text('not response main2, restart thành công')
 			sleep(180)
 			os.system("shutdown /r")
 			sleep(180)
 
 		if int(val1) == int(val12):
-			send_message_text('not response main1, restart thành công')
+			restart_number()
+			if isConnected:
+				send_message_text('not response main1, restart thành công')
 			sleep(180)
 			os.system("shutdown /r")
 			sleep(180)

@@ -41,24 +41,25 @@ def send_message_text(message_text):
 	except Exception as e:
 		return False
 
-def check_message_text():
+# Hàm kiểm tra email mới và lưu nội dung vào file dktb.txt hoac dkmt.txt
+def check_message_text(para):
 	# Cấu hình thông tin đăng nhập Gmail
 	USERNAME = 'qbquangbinh@gmail.com'
 	PASSWORD = os.getenv("PASS_EMAIL") # Nếu dùng xác thực 2 bước, hãy sử dụng App Password
 
 	IMAP_SERVER = 'imap.gmail.com'
 	IMAP_PORT = 993
-	if os.path.exists("dkmt.txt"):
-		os.remove("dkmt.txt")
+	if os.path.exists(f"{para}.txt"):
+		os.remove(f"{para}.txt")
 	try:
 		# Kết nối tới server IMAP của Gmail
 		mail = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT)
 		mail.login(USERNAME, PASSWORD)
 		mail.select("inbox")
 
-		# Tìm kiếm email chưa đọc từ người gửi qbquangbinh@gmail.com với Subject chứa "dkmt"
+		# Tìm kiếm email chưa đọc từ người gửi qbquangbinh@gmail.com với Subject chứa "dktb" hoặc "dkmt"
 		while True:
-			search_criteria = '(UNSEEN FROM "qbquangbinh@gmail.com" SUBJECT "dkmt")'
+			search_criteria = f'UNSEEN FROM "qbquangbinh@gmail.com" SUBJECT "{para}"'
 			status, messages = mail.search(None, search_criteria)
 			if status == 'OK':
 				break
@@ -75,8 +76,8 @@ def check_message_text():
 			raw_email = data[0][1]
 			msg = email.message_from_bytes(raw_email)
 
-			# Lưu nội dung email vào file dkmt.txt
-			with open("dkmt.txt", "w", encoding="utf-8") as dkmt_file:
+			# Lưu nội dung email vào file dktb.txt hoặc dkmt.txt
+			with open(f"{para}.txt", "w", encoding="utf-8") as dkmt_file:
 				if msg.is_multipart():
 					for part in msg.walk():
 						if part.get_content_type() == "text/plain":
